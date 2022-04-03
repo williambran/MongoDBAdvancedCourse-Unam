@@ -1,4 +1,4 @@
-//optener informacion de las collections
+//optener informacion de las collection
 db.getCollectionInfos()
 
 //Crear (No se crea hasta ingresar documentos)
@@ -1196,5 +1196,224 @@ db.alumnos.aggregate([
               }
       }
    ])
-          
+         
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+/////////// Clase 1 Marzo
+//Agrupamos por ciudad e ipmrimimos cuantos alumnos hay por cada ciudad
+db.alumnos.aggregate([
+    { $group:{
+            _id:"$ciudad",
+            alumnos:{ $push:{ $concat:["$nombre"," ","$ap_paterno"," ","$ap_materno"]}}
+        }
+    },
+    { $project:{ ciudad:"$_id", alumnos:"$alumnos", _id:0}}
+])
+    
+
+
+//hace un array de cada alumno deacuerdo a sus evaluaciones (de tipo array ) y agrupamos, si un alumno tiene 5 evaluaciones, va a ver 5 item de ese alumno por la funcion unwind
+db.alumnos.aggregate([
+    {$unwind:"$evaluaciones"},
+    { $group:{
+            _id:"$ciudad",
+            alumnos:{ $push:{ $concat:["$nombre"," ","$ap_paterno"," ","$ap_materno"]}}
+        }
+    },
+    { $project:{ ciudad:"$_id", alumnos:"$alumnos", _id:0}}
+])
+
+
+//The $push operator appends a specified value to an array, hace objetos y los agrega a un array para este caso
+db.alumnos.aggregate([
+    { $group:{
+            _id:"$ciudad",
+            alumnos:{ $push:{ 
+                alumno:{$concat:["$nombre"," ","$ap_paterno"," ","$ap_materno"]},
+                matricula:"$clave_alu", curp:"$curp"
+                } }
+        }
+    },
+    { $project:{ ciudad:"$_id", alumnos:"$alumnos", _id:0}}
+])
+
+
+
+
+//Agrupamos por ciudad y años, sacamos evaluacion sumea y promedio, volvemos agruar solo porciudad, y años lo agremamos comodato en un array y al final en un project 
+db.alumnos.aggregate([
+    { $unwind:"$evaluaciones"},
+    { $match:{ $and:[{sexo:"M"}, {edad:{$exists:1}}]}},
+    { $group:{
+            _id:{ciudad:"$ciudad", anios:"$edad.anios"},
+            total:{ $sum:"$evaluaciones.calificacion"},
+            promedio:{ $avg:"$evaluaciones.calificacion"}
+        }
+    },
+    { $group:{
+            _id:"$_id.ciudad", 
+            ciudadDatos:{ $push:{ anios:"$_id.anios", total:"$total", promedio:"$promedio"} }
+        }
+    },
+    { $project:{ ciudad:"$_id", ciudadDatos:"$ciudadDatos", _id:0}}
+])
+    
+
+//$addToSet NO repite los valores que se agregan a un arreglo  No repetido valores 
+db.alumnos.aggregate([
+    {$unwind:"$evaluaciones"},
+    { $group:{
+            _id:"$ciudad",
+            alumnos:{ $addToSet:{ $concat:["$nombre"," ","$ap_paterno"," ","$ap_materno"]}}
+        }
+    },
+    { $project:{ ciudad:"$_id", alumnos:"$alumnos", _id:0}}
+])
+    
+    
+//agrupa por sexo y  agrega a un array las ciudades que tienen dicho sexo, pero se repiten, abajo un ejemplo sin repetir atributos 
+db.alumnos.aggregate([
+    {$sort:{ ciudad:1}},
+    { $group:{
+            _id:"$sexo",
+            ciudades:{ $push: "$ciudad"}
+        }
+    },
+    { $project:{ sexo:"$_id", ciudades:"$ciudades", _id:0}}
+])
+    
+    
+
+
+
+//ordena por el parametro pasado en $sort "Ordena" | $addToSet solo funciona en $group , y de esa agrupacion toma los atributos  y los uno en un array 
+db.alumnos.aggregate([
+    {$sort:{ ciudad:1}},
+    { $group:{
+            _id:"$sexo",
+            ciudades:{ $addToSet: "$ciudad"}
+        }
+    },
+    { $project:{ sexo:"$_id", ciudades:"$ciudades", _id:0}}
+])
+
+
+
+// max, min, avg, sum
+// $first $last
+db.alumnos.aggregate([
+    //{ $unwind:"$evaluaciones"},
+    { $match:{ $and:[{ciudad:"QUERETARO"}, {sexo:"F"}]}},
+    { $group:{
+        _id:{ matricula:"$clave_alu", alumno:{$concat:["$nombre"," ","$ap_paterno"," ","$ap_materno"]}},
+        primeraCalif:{ $first:"$evaluaciones.calificacion"},
+        ultimaCalif:{ $last:"$evaluaciones.calificacion"}
+       }},
+    {$sort:{ "_id.alumno":1}},
+])
+
+
+
+db.alumnos.aggregate([
+    { $unwind:"$evaluaciones"},
+    { $match:{ $and:[{ciudad:"QUERETARO"}, {sexo:"F"}]}},
+    { $group:{
+        _id:{ matricula:"$clave_alu", alumno:{$concat:["$nombre"," ","$ap_paterno"," ","$ap_materno"]}},
+        primeraCalif:{ $first:"$evaluaciones.calificacion"},
+        ultimaCalif:{ $last:"$evaluaciones.calificacion"}
+       }},
+    {$sort:{ "_id.alumno":1}},
+])
+    
+    
+ 
+    
+    
+
+db.alumnos.aggregate([
+    { $unwind:"$evaluaciones"},
+    { $match:{ $and:[{ciudad:"QUERETARO"}, {sexo:"F"}]}},
+    { $group:{
+        _id:{ matricula:"$clave_alu", alumno:{$concat:["$nombre"," ","$ap_paterno"," ","$ap_materno"]}},
+        primeraCalif:{ $first:"$evaluaciones.calificacion"},
+        ultimaCalif:{ $last:"$evaluaciones.calificacion"},
+        totalCalif:{ $sum:"$evaluaciones.calificacion"},
+        promedioCalif:{ $avg:"$evaluaciones.calificacion"},
+        maxCalif:{ $max:"$evaluaciones.calificacion"},
+        minCalif:{ $min:"$evaluaciones.calificacion"},
+        numeroCalif:{ $sum:1}
+       }},
+    {$sort:{ "_id.alumno":1}},
+])
+    
+    
+
+
+
+
+// $addFields
+db.alumnos.aggregate([
+    //{ $unwind:"$evaluaciones"},
+    { $match:{ $and:[{ciudad:"QUERETARO"}, {sexo:"F"}]}},
+    { $project:{
+        matricula:"$clave_alu", alumno:{$concat:["$nombre"," ","$ap_paterno"," ","$ap_materno"]},
+        evaluaciones:"$evaluaciones"
+        }},
+     { $addFields:{
+        primeraCalif:{ $first:"$evaluaciones.calificacion"},
+        ultimaCalif:{ $last:"$evaluaciones.calificacion"},
+        totalCalif:{ $sum:"$evaluaciones.calificacion"},
+        promedioCalif:{ $avg:"$evaluaciones.calificacion"},
+        maxCalif:{ $max:"$evaluaciones.calificacion"},
+        minCalif:{ $min:"$evaluaciones.calificacion"},
+        numeroCalif:{ $sum:1},
+        semestre:"2022-1"
+       }},
+])
+    
+
+
+     //pediente
+db.alumnos.aggregate([
+    {$unwind:"$evaluaciones"},
+    {$match: {$and:[{ciudad: "QUERETARO"},{sexo:"F"}]}},
+    {$group:{
+        _id:{matricula:"$clave_alu", alumno: {$concat: ["$nombre", " ", "$ap_paterno,", " ", "$ap_materno"]}},
+        primera Calificacion: {$first}
+        }}
+    
+    ]) 
+    
+    
+    
+db.alumnos.aggregate([
+     {$match: {$and:[{ciudad: "QUERETARO"},{sexo:"F"}]}},
+     {$project: {
+         matriculo: "$clave_alu", alumno: {$concat: ["$nombre", " ", "$ap_paterno,", " ", "$ap_materno"]},
+         evaluaciones: "$evaluaciones"
+         }},
+        {
+            $addFields: {
+                primeraCalif: {$first: "$evaluaciones.calificacion"},
+                ultimaCalif: {$last: "$evaluaciones.calificacion"},
+                totalCalif: {$sum: "$evaluaciones.calificacion"},
+                promedioCalif: {$avg: "$evaluaciones.calificacion"},
+                maxCalif: {$max: "$evaluaciones.calificacion"}
+                }
+            } 
         
+      ])
+        
+            
+            
+           // Lunes
+            
+  

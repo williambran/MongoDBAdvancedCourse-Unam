@@ -1415,5 +1415,189 @@ db.alumnos.aggregate([
             
             
            // Lunes
-            
-  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ //Controlar el numero de grupos con buckets
+ // - Agrupa las agrupaciones del group por el id especificado en el boundaries, y los que sobren los guarda en default
+db.alumnos.aggregate([
+    {$unwind:"$evaluaciones"},
+    {
+        $bucket: {
+            groupBy: "$edad.dias",
+            boundaries: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32],
+            default: "nulos",
+            output:{
+                nalu: {$sum:1},
+                alumnos:{$addToSet: {
+                    almuno: { $concat: ["$nombre", " " , "$ap_paterno",
+                    " ", "$ap_materno", " "]},
+                    materia: "$evaluaciones.materia",
+                    calificacion: "$evaluaciones.calificacion",
+                    edad: "$edad"
+                    }}
+
+                }
+
+            }
+     },
+    /* {
+         $project:{
+             califMinima:"$_id.min", calificacionMaxima: {$add:["$_id.max", -1]},
+             nalu: "$nalu", alumnos: "$alumnos",_id:0
+             }
+         }*/
+])
+
+db.alumnos.aggregate([
+     {$match: {"evaluaciones.calificacion": 8}}
+     ])
+
+// BucketAuto.- Mongo agrega automaticamente los mimites para hacer hacer las agrupaciones de los groupby por un promedio encontrado en la agrupacion
+// de los dcumentos, partir del valor pasado en buckets , en este caso van del 5 al 6, del 6 al 7 .....
+db.alumnos.aggregate([
+    {$unwind:"$evaluaciones"},
+    {
+        $bucketAuto: {
+            groupBy: "$evaluaciones.calificacion",
+            buckets:17,
+            output:{
+                nalu: {$sum:1},
+                alumnos:{$addToSet: {
+                    $concat: ["$nombre", " " , "$ap_paterno",
+                    " ", "$ap_materno", " ", {$toString:"$evaluaciones.materia" }]
+                    }}
+                } 
+            }
+     }
+])
+     
+     
+//Arroja los mismos resultados, pero los agregamos a un $project, y ahi jugamos con el output 
+db.alumnos.aggregate([
+    {$unwind:"$evaluaciones"},
+    {
+        $bucketAuto: {
+            groupBy: "$evaluaciones.calificacion",
+            buckets:15,
+            output:{
+                nalu: {$sum:1},
+                alumnos:{$addToSet: {
+                    almuno: { $concat: ["$nombre", " " , "$ap_paterno",
+                    " ", "$ap_materno", " "]},
+                    materia: "$evaluaciones.materia",
+                    calificacion: "$evaluaciones.calificacion"
+                    }}
+
+                }
+
+            }
+     },
+     {
+         $project:{
+             califMinima:"$_id.min", calificacionMaxima: {$add:["$_id.max", -1]},
+             nalu: "$nalu", alumnos: "$alumnos",_id:0
+             }
+         }
+])
+         
+         
+
+
+
+
+     
+db.alumnos.aggregate([
+    {$unwind:"$evaluaciones"},
+    {
+        $bucketAuto: {
+            groupBy: "$edad.dias",
+            buckets:30,
+            output:{
+                nalu: {$sum:1},
+                alumnos:{$addToSet: {
+                    almuno: { $concat: ["$nombre", " " , "$ap_paterno",
+                    " ", "$ap_materno", " "]},
+                    materia: "$evaluaciones.materia",
+                    calificacion: "$evaluaciones.calificacion"
+                    }}
+
+                }
+
+            }
+     },
+    /* {
+         $project:{
+             califMinima:"$_id.min", calificacionMaxima: {$add:["$_id.max", -1]},
+             nalu: "$nalu", alumnos: "$alumnos",_id:0
+             }
+         }*/
+])
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+ db.alumnos.aggregate([
+     {$unwind:"$materias"}, 
+    {$sortByCount: "$materias"},
+    {$project: {"materia": "$_id",nrenglones:"$count", _id:0}}
+     ])    
+     
+     
+ //Facet crea un arreglo de documentos y lo agregamos a un nombre de objeto
+db.alumnos.aggregate([
+    {
+     $facet:{
+        "materias": [
+        {$unwind:"$materias"}, 
+        {$sortByCount: "$materias"},
+        {$project: {"materia": "$_id",nrenglones:"$count", _id:0}}
+        ]
+      } 
+     }    
+])
+     
+     
+     
+     
+     
+db.alumnos.aggregate([
+    {
+     $facet:{
+        "materias": [
+        {$unwind:"$materias"}, 
+        {$sortByCount: "$materias"},
+        {$project: {"materia": "$_id",nrenglones:"$count", _id:0}}
+        ],
+        "evaluaciones": [
+        {$unwind:"$evaluaciones"}, 
+        {$sortByCount: "$evaluaciones.calificacion"},
+        {$project: {"materia": "$_id",nrenglones:"$count", _id:0}}
+        ],
+        "ciudades":[
+        {$sortByCount:"$ciudad"},
+        {$project:{"ciudad": "$_id", nrenglones:"$count",_id:0}}
+        ]
+      } 
+     }    
+])

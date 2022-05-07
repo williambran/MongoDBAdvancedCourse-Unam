@@ -34,8 +34,8 @@ db.tiempo24h.insertMany( [
    }
    ]
 )
-  
-   
+
+
  db.inventario.insertMany([
    { item: "notebook", qty: 50, size: { h: 8.5, w: 11, uom: "in" }, status: "P" },
    { item: "paper", qty: 100, size: { h: 8.5, w: 11, uom: "in" }, status: "D" },
@@ -44,63 +44,63 @@ db.tiempo24h.insertMany( [
    { item: "sketchbook", qty: 80, size: { h: 14, w: 21, uom: "cm" }, status: "A" },
    { item: "sketch pad", qty: 95, size: { h: 22.85, w: 30.5, uom: "cm" }, status: "A" }
 ])
-   
-   
+
+
  //Formas de optener los documentos de una collection
  db.getCollection('tiempo24h').find({})
  db.tiempo24h.find()
  db.inventario.find()
- 
- 
+
+
  //contar los elementos de una collection
- db.inventario.count() 
- 
+ db.inventario.count()
+
   // Eliminr collectionsencible a mayusculas
  db.prueba2.drop()
-   
- 
+
+
  //Utilizar JvaScript en mongo
  var campos = db.alumnos.findOne()
  for(campo in campos){print(campo)}
  campos
-   
-   
-   
+
+
+
    //conteo por algun atributo especifico
-  db.alumnos.find().count() 
+  db.alumnos.find().count()
   db.alummos.find({sexo:'F'}).count()
-   
+
    //Select nombre,ap_paterno,curp,edad FROM alumnos WHERE sexo = 'F'    ----> simepre muestra el _id
    db.alummos.find({sexo:'F'}, {nombre:1, ap_paterno:1, curp:1, edad:1})
-   
+
    //Select nombre,ap_paterno,curp,edad FROM alumnos WHERE sexo = 'F'    ----> No muestra el id
    db.alummos.find({sexo:'F'}, {nombre:1, ap_paterno:1, curp:1, edad:1, _id:0})
-   
+
    db.alummos.find({sexo:'F'}, {kk:1, ss:1, ssd:1, f:1, _id:0})
-   
-   db.alummos.find({sexo:'F'},{nombre:1,ap_paterno:1, curp:1, edad:1, _id:0}).sort({ap_paterno:1,nombre:1})  
-   
+
+   db.alummos.find({sexo:'F'},{nombre:1,ap_paterno:1, curp:1, edad:1, _id:0}).sort({ap_paterno:1,nombre:1})
+
    //SELECT nansakkasa From alumnos WHERE sexo = 'F' ORDER BY ap_paterno DESC,nombre DESC
-   db.alummos.find({sexo:'F'},{nombre:1,ap_paterno:1, curp:1, edad:1, _id:0}).sort({ap_paterno:-1,nombre:-1})  
-   
+   db.alummos.find({sexo:'F'},{nombre:1,ap_paterno:1, curp:1, edad:1, _id:0}).sort({ap_paterno:-1,nombre:-1})
+
    //SELECT nansakkasa From alumnos WHERE sexo = 'F' ORDER BY ap_paterno ,nombre LIMIT 5
-   db.alummos.find({sexo:'F'},{nombre:1,ap_paterno:1, curp:1, edad:1, _id:0}).sort({ap_paterno:1,nombre:1}).limit(5)  
-   
-   //SELECT sk,ds,gr,wd FROM alumnos WHERE sexo = 'F' ORDER BY ap_paterno ,nombre LIMIT 5, 5    ----> Se brinca los primeros 5 
-   db.alummos.find({sexo:'F'},{nombre:1,ap_paterno:1, curp:1, edad:1, _id:0}).sort({ap_paterno:1,nombre:1}).skip(5).limit(5) 
-  
+   db.alummos.find({sexo:'F'},{nombre:1,ap_paterno:1, curp:1, edad:1, _id:0}).sort({ap_paterno:1,nombre:1}).limit(5)
+
+   //SELECT sk,ds,gr,wd FROM alumnos WHERE sexo = 'F' ORDER BY ap_paterno ,nombre LIMIT 5, 5    ----> Se brinca los primeros 5
+   db.alummos.find({sexo:'F'},{nombre:1,ap_paterno:1, curp:1, edad:1, _id:0}).sort({ap_paterno:1,nombre:1}).skip(5).limit(5)
+
   //SELCT * FROM alumnos WHERE sexo='F'AND edad.anios = 28
   db.alummos.find({sexo:'F', "edad.anios":28}).count()
-  
+
   //SELECT * FROM alumnos WHERE sexo = 'F'  OR  edad.anios = 28;
     db.alummos.find({$or:  [{sexo:'F'}, {"edad.anios":28}]  }).count()
-    
+
    //SELECT * FROM alumnos WHERE sexo = 'F'  AND  edad.anios = 28;
     db.alummos.find({$and:  [{sexo:'F'}, {"edad.anios":28}]  }).count()
-    
-    
-    
-    
+
+
+
+
 ////////////////
 //Encontrar alumnos con curp de tipo numerico
 db.alumnos.find({"curp": {$type:"number"}}).count()
@@ -129,16 +129,16 @@ db.direcciones.insertMany(
   {"_id":6, direccion:"Bosques de Africa 2", cp: {codigo:"57200", zp:"57201"}}
 ]
 )
-  
+
 db.direcciones.insertMany([
-  {"_id":7, 
+  {"_id":7,
   direccion:"Bosques de Africa 2", cp: [
    {codigo:"57200", zp:"57201"},
    {codigo:"58200", zp:"58201"},
    {codigo:"59200", zp:"59201"}
    ]
   },
-  {"_id":8, 
+  {"_id":8,
   direccion:"Bosques de Africa 2", cp: [
    ["57200", 57201],
    ["58200", 58201],
@@ -148,28 +148,28 @@ db.direcciones.insertMany([
   {"_id":9, direccion:"Bosques de Africa 2", "cp" : ISODate("2020-01-08T08:52:30.038Z")}
   ]
 )
-  
-  
+
+
   db.direcciones.find()
   db.direcciones.find({ "cp":{$exists:1}})
 
 //doube
   db.direcciones.find({ "cp":{$type: "double"}})
-  
+
   //String
     db.direcciones.find({ "cp":{$type: 2}})
   db.direcciones.find({ "cp":{$type: "string"}})
-  
+
   //Object
     db.direcciones.find({ "cp":{$type: "object"}})
-    
+
     //Array
     db.direcciones.find({ "cp":{$type: "array"}})
-      
+
     //objectID
     db.direcciones.find({ "cp":{$type: 7}})
     db.direcciones.find({ "cp":{$type: "objectId"}})
-          
+
     db.direcciones.insert({"_id":10, direccion:"Bosques de Africa 2", "cp" : true})
 
 
@@ -181,12 +181,12 @@ db.direcciones.insertMany([
 //Date
 db.direcciones.find({ "cp":{$type: 9}})
 db.direcciones.find({ "cp":{$type: "date"}})
-  
+
 
 //Nulos
 db.direcciones.find({ "cp":{$type: "null"}})
 
-  
+
 
 //Int
 db.direcciones.find({ "cp":{$type: 16}})
@@ -209,73 +209,73 @@ db.alumnos.find({"edad.anios": {$gte: 30}}).count()
 //Expresiones.- podemos la agregacion de expresiones como gte
 db.alumnos.find({$expr: {$gte: ["$edad.dias","$edad.anios"]}}).count()
 
-// el gt tiene una condicion en 
+// el gt tiene una condicion en
 db.alumnos.find({
    $expr: {
         $gt:[
-          {   
+          {
             $cond:{
                 if:{ $gte: ["$edad.anios",30]},
                 then:{$divide:["$edad.anios", 2]},
-                else:{ $divide:["$edad.anios", 3]}               
+                else:{ $divide:["$edad.anios", 3]}
             }
-          }, 
+          },
         10
         ]
     }
    })
-   
-   
+
+
    db.alumnos.find({
    $expr: {
         $gt:[
-          {   
+          {
             $cond:{
                 if:{ $gte: ["$edad.anios",30]},
                 then:{$divide:["$edad.anios", 2]},
-                else:{ $divide:["$edad.anios", 3]}               
+                else:{ $divide:["$edad.anios", 3]}
             }
-          }, 
+          },
           {
               $cond:{
                 if:{ $gte: ["$edad.anios",30]},
                 then:"$edad.meses",
-                else: "$edad.dias"  
+                else: "$edad.dias"
               }
           }
         ]
     }
    })
-   
-   
-   
+
+
+
    db.alumnos.find({
    $expr: {
         $gt:[
-          {   
+          {
             $cond:{
                 if:{ $gte: ["$edad.anios",30]},
                 then:{$divide:["$edad.anios", 2]},
-                else:{ $divide:["$edad.anios", 3]}               
+                else:{ $divide:["$edad.anios", 3]}
             }
-          }, 
+          },
           {
               $cond:{
                 if:{ $gte: ["$edad.anios",30]},
                 then:"$edad.meses",
-                else: "$edad.dias"  
+                else: "$edad.dias"
               }
           }
         ]
     }
    }).count()
-   
-   
-   
-db.alumnos.find({ 
+
+
+
+db.alumnos.find({
     $and:[
     {
-    $expr: { 
+    $expr: {
         $gt:[
             {
                 $cond:{
@@ -288,15 +288,15 @@ db.alumnos.find({
                 $cond:{
                     if:{ $gte:["$edad.anios", 28]},
                     then: "$edad.meses" ,
-                    else: "$edad.dias" 
+                    else: "$edad.dias"
                 }
             }
-        ] 
-    } 
+        ]
+    }
     },
     { edad:{ $exists:1} }
    ]
-    
+
 })
 
 
@@ -305,11 +305,11 @@ db.alumnos.find({
 ////////////////
 //base de datos Ejercicios
 
-//2.- Mostrar todos los documentos de la colección restaurants 
+//2.- Mostrar todos los documentos de la colección restaurants
 db.getCollection('restaurant').find({})
 
 
-//3 Mostrar nombre de restaurante, barrio y cocina de la colección restaurants  ordenados por barrio   
+//3 Mostrar nombre de restaurante, barrio y cocina de la colección restaurants  ordenados por barrio
 db.restaurant.find({},{nombre: 1, barrio:1, cocina:1}).sort({barrio:1})
 
 //4Mostrar los primeros 5 restaurantes del barrio Bronx.
@@ -324,19 +324,19 @@ db.restaurant.find({"calificaciones.puntuacion":{$gte: 90}})
 //7Mostrar los restaurantes de comida American o Chineese del barrio Queens.
 db.restaurant.find({ [{cocina:"American"}, {cocina:"Chineese"}] })
 
-//8Mostrar los restaurantes con una calificación “A” y puntuación 9 
+//8Mostrar los restaurantes con una calificación “A” y puntuación 9
 db.restaurant.find({ $and: [{"calificaciones.calificacion":"A"}, {"calificaciones.puntuacion":9}] })
 
 
 //9  Mostrar los restaurantes de comida Mexicana que no esten en el barrio Queens o bronx
 db.restaurant.find({ $and : [
-    
+
     {barrio:{ $nin: ["Bronx", "Queens"]}}
     , {cocina: "Mexican" }
     ]
-     
+
 })
-    
+
 
 
 
@@ -350,11 +350,11 @@ db.restaurant.find({ $and : [
 db.alumnos.find({nombre:{$regex:"^R.*$"}}, {nombre:1, _id:0})
 db.alumnos.find(  {nombre:  {$regex:"^r.*$", $options:"i"}  }, {nombre:1, _id:0}  )
 
-//evaluar expresion regular 
+//evaluar expresion regular
 db.alumnos.find({nombre:/^R/}, {nombre:1, _id:0})
 db.alumnos.find({nombre:/^r/i}, {nombre:1, _id:0})
 
-//Termina con una letra (R) 
+//Termina con una letra (R)
 db.alumnos.find({nombre:{$regex:".*r$", $options:"i"}}, {nombre:1, _id:0})
 db.alumnos.find({nombre:/.*r$/i}, {nombre:1, _id:0})
 
@@ -430,7 +430,7 @@ db.alumnos.distinct("nombre", { nombre:/^[a-zA-Z]{4,6}$/i})
 db.alumnos.distinct("nombre", { nombre:/^[a-zA-Z]{6,}$/i})
 
 
-//coincidir  con caracteres de puntucacion y con simbolos 
+//coincidir  con caracteres de puntucacion y con simbolos
 //!"#$...
 db.alumnos.distinct("email", {email:/[[:punct:]]/i})
 
@@ -462,7 +462,7 @@ db.alumnos.distinct("nombre", {nombre:/\S/i})
 //digitos   \d
 db.alumnos.distinct("nombre", {nombre:/\d/i})
 
-//que no sean digitos 
+//que no sean digitos
 db.alumnos.distinct("nombre", {nombre:/\D/i})
 
 //REGEX PARA UNA CURP
@@ -487,9 +487,9 @@ db.alumnos.find({
     curp: {$not: /\d/}
 },
 {nombre:1, curp:1, _id:0})
-    
-    
-    
+
+
+
 
 
 
@@ -564,7 +564,7 @@ db.user.insertMany([
    "nombre":"ishahi",
    "correo": "ishahi@gmail.com",
    "ciudad": "chilpancingo",
-   
+
    "direccion":[{
      "calle":"Genaro vazquez",
       "numero": 139,
@@ -617,7 +617,7 @@ db.user.insertMany([
    "nombre":"liam",
    "correo": "liam@gmail.com",
    "ciudad": "acapulco",
-   
+
    "direccion":[{
      "calle":"lindavista",
       "numero": 139,
@@ -679,49 +679,49 @@ db.user.insertMany([
 
 
 ///////////////////
-// GROUP BY 
+// GROUP BY
 
 db.alumnos.find({})
 //aggregate contendra ->$ ciudad tienen simbolo $ por que funciona como operador
-db.alumnos.aggregate( 
+db.alumnos.aggregate(
 [
-  {$group: {"_id": "$ciudad","count":{$sum:1} } }, 
+  {$group: {"_id": "$ciudad","count":{$sum:1} } },
   {$project: {ciudadh:"$_id", count:"$count", _id:0} }
 ]
 )
-  
-  
-  //Agrupamos por 
-db.alumnos.aggregate( 
+
+
+  //Agrupamos por
+db.alumnos.aggregate(
 [
-  {$group: {"_id": {ciudad: "$ciudad", sexo: "$sexo"} ,"noalu":{$sum:1} } }, 
- // { $count: "nreg"} 
+  {$group: {"_id": {ciudad: "$ciudad", sexo: "$sexo"} ,"noalu":{$sum:1} } },
+ // { $count: "nreg"}
   {$project: {ciudadh:"$_id.ciudad",  sexo: "$_id.sexo", noalu:"$noalu", _id:0} },
   {$sort: {ciudadh:1,sexo: 1}},
   {$match: {ciudadh: "QUERETARO"}}
 ]
-)  
-  
-  
-  
-  
-  db.alumnos.aggregate( 
+)
+
+
+
+
+  db.alumnos.aggregate(
 [
   {$match:{ciudad:{$exists:1}}},
-  {$group: {"_id": {ciudad: "$ciudad", sexo: "$sexo"} ,"noalu":{$sum:1} } }, 
- // { $count: "nreg"} 
+  {$group: {"_id": {ciudad: "$ciudad", sexo: "$sexo"} ,"noalu":{$sum:1} } },
+ // { $count: "nreg"}
   {$project: {ciudadh:"$_id.ciudad",  sexo: "$_id.sexo", noalu:"$noalu", _id:0} },
   {$sort: {ciudadh:1,sexo: 1}},
   //{$match: {ciudadh: "QUERETARO"}}
 ]
-)  
-  
-  
-  
-  
+)
+
+
+
+
   //regresa una caleccion, pero no es la coleccion alumnos, es una vista consecuente del match
   //Regresa el conteo de quienn tiene ciudad y sexo.
-  db.alumnos.aggregate( 
+  db.alumnos.aggregate(
 [
   {$match:{ciudad:{$exists:1}}},
   {$match:{sexo:{$exists:1}}},
@@ -729,28 +729,28 @@ db.alumnos.aggregate(
   {$count: "neg"}
 
 ]
-)  
-  
-  
-  
+)
+
+
+
   //regresa el numero de registros, que tengan sexo y que tengan sexo
-  
-    db.alumnos.aggregate( 
+
+    db.alumnos.aggregate(
 [
   {$match:{ciudad:{$exists:1}}},
   {$match:{sexo:{$exists:1}}},
-  {$group: {"_id": {ciudad: "$ciudad", sexo: "$sexo"} ,"noalu":{$sum:1} } }, 
- // { $count: "nreg"} 
+  {$group: {"_id": {ciudad: "$ciudad", sexo: "$sexo"} ,"noalu":{$sum:1} } },
+ // { $count: "nreg"}
   {$project: {ciudadh:"$_id.ciudad",  sexo: "$_id.sexo", noalu:"$noalu", _id:0} },
   {$sort: {ciudadh:1,sexo: 1}},
   //{$match: {ciudadh: "QUERETARO"}}
   {$count: "nreg"}
-  
+
 ]
-)  
-  
-  
-  
+)
+
+
+
  /*
   $project
   $match
@@ -762,13 +762,13 @@ db.alumnos.aggregate(
   $out
   $geonear
   $sample    muestrear , nuestra de forma aleatoriamente un ejemplo
-  $lookup    
-  
+  $lookup
+
   */
-  
-  
-  
-  
+
+
+
+
 
 
 
@@ -786,18 +786,18 @@ db.alumnos.find({})
 4.- Arupamos por sexo y los contamos
 5.- Realizamos una nueva projection  solo de sexo y nalu(atributos que hicimos en el group)
 */
-db.alummos.aggregate( 
+db.alummos.aggregate(
 [
-   {$match: {ciudad: "QUERETARO"}}, 
-   {$project:{_id:0,email:"$email", sexo:"$sexo", 
-       alumno: {$concat:["$nombre", " ", "$ap_paterno", " ", "$ap_materno"]} 
-       }  
+   {$match: {ciudad: "QUERETARO"}},
+   {$project:{_id:0,email:"$email", sexo:"$sexo",
+       alumno: {$concat:["$nombre", " ", "$ap_paterno", " ", "$ap_materno"]}
+       }
     },
     {$match:{alumno:/jose/i}},
     {$group:{"_id":"$sexo","nalu":{$sum:1}}},
     {$project: {sexo:"$_id", nalu:"$nalu", _id:0}},
    // {$match:{ nalu:{ $gte:5}}}
-   
+
 ]
 )/*
     SELECT sexo,count(*)nalu
@@ -806,14 +806,14 @@ db.alummos.aggregate(
     GROUP BY sexo
     HAVING count(*) >=5
    */
-   
+
    // econtrar a los alumnos que tengan evaluaciones
-   db.alumnos.find( 
+   db.alumnos.find(
       {evaluaciones: { $exists:1}}
      // {_id:0, email:1 , sexo:1 ,}
     )
-   
-  
+
+
   /*
   1.- aggregate, para hacer uso de diferentes operadores dentro, como match,group etc
   2.- Solo quins tengan evaluciones
@@ -825,53 +825,53 @@ db.alummos.aggregate(
     {$project: {_id:0 , email: "$email", sexo: "$sexo", sexo:1, calificaciones: "$evaluaciones.calificacion",
         materias: "$evaluaciones.materia",fechas:"$evaluaciones.fecha",
         alumno:{$concat:["$nombre", " ", "$ap_paterno", " ", "$ap_materno"]}}}
-      
+
    ])
- 
-          
-          
-          
+
+
+
+
    /*
    1.- Agregamos el aggregate, macheamos por clave alumno, y que existan las evaluaciones
-   2.- $unwind, o que hace es que separa por atributos de un array     
-   */       
+   2.- $unwind, o que hace es que separa por atributos de un array
+   */
   db.alumnos.aggregate([
        {$match: {evaluaciones: {$exists:1}}},
        {$match: {"clave_alu": 11050207}},
        {$unwind: "$evaluaciones"},
        //{$unwind: "$materias"}
   ])
-    
-       
-          
-          
+
+
+
+
       //El mismo que esta arriba
    db.alumnos.aggregate([
    {$match: {evaluaciones: {$exists:1}}},
    {$match: {"clave_alu": 11050207}},
    {$project: {_id:0 , email: "$email", sexo: "$sexo", sexo:1 ,evaluaciones: "$evaluaciones.calificacion",
        materia: "$evaluaciones.materia",fechas:"$evaluaciones.fecha",
-       alumno:{$concat:["$nombre", " ", "$ap_paterno", " ", "$ap_materno"]}}} 
+       alumno:{$concat:["$nombre", " ", "$ap_paterno", " ", "$ap_materno"]}}}
    ])
-          
-          
- 
+
+
+
  //unwind, lo que hace es destruir un array por cada elemento.
     db.alumnos.aggregate([
-    { $match:{ evaluaciones:{ $exists: 1}}}, 
+    { $match:{ evaluaciones:{ $exists: 1}}},
     { $match:{"clave_alu" : 11050207} },
-    { $project:{ _id:0, email:"$email", sexo:"$sexo", sexo:1, calificaciones:"$evaluaciones.calificacion", 
+    { $project:{ _id:0, email:"$email", sexo:"$sexo", sexo:1, calificaciones:"$evaluaciones.calificacion",
         materias:"$evaluaciones.materia", fechas:"$evaluaciones.fecha", //evaluaciones:1,
         alumno:{ $concat:["$nombre", " ", "$ap_paterno", " ", "$ap_materno" ]} } },
     { $unwind: "$calificaciones"},
     { $unwind: "$materias"},
     { $unwind: "$fechas"},
-    //{ $count: "nalu"} 
+    //{ $count: "nalu"}
     ])
-      
-    
-    
-    
+
+
+
+
   db.alumnos.aggregate([
     {$match: {"evaluaciones":{$exists: 1}}}
     ])
@@ -885,9 +885,9 @@ db.alummos.aggregate(
           evaluacion: "$evaluaciones.materia",    //no sirve este atributo
           nombre: "$_id.alumno",
           Materisreprobadas: "$Total"
-          
+
           }}
-       
+
       ])
 
 
@@ -902,7 +902,7 @@ db.alummos.aggregate(
 
 
 
-///////////////////// 
+/////////////////////
 //clase usamos unwind
 
 db.alumnos.aggregate( [
@@ -910,7 +910,7 @@ db.alumnos.aggregate( [
   {$unwind: "$evaluaciones"},
   {$unwind: "$materias"}
 ])
-  
+
   //este no
 db.alumnos.aggregate( [
   {$match: {"clave_alu": 11050235}},
@@ -918,18 +918,18 @@ db.alumnos.aggregate( [
   {$match: {"evaluaciones.calificacion": {$gte: 6}}},
   {$group:{ "_id":["$clave_alu", "$ap_paterno" ,"$ap_materno", "$nombre" ]}}
 ])
-  
-  
+
+
 db.alumnos.aggregate( [
   {$match: {"clave_alu": 11050235}},
   {$unwind: "$evaluaciones"},
   {$match: {"evaluaciones.calificacion": {$gte: 6}}},
   {$group:{ "_id":{"clave_alu":"$clave_alu", "alumno": { $concat:["$ap_paterno" ,"$ap_materno", "$nombre"] }},
   "promedio":{$avg: "$evaluaciones.calificacion"}
-  
+
   } }
 ])
-  
+
   db.alumnos.aggregate( [
   //{$match: {"clave_alu": 11050235}},
   {$unwind: "$evaluaciones"},
@@ -946,11 +946,11 @@ db.alumnos.aggregate( [
       calificacionPromedio:"$calificacionPromedio",CalificacionMax:"$CalificacionMax" ,
       CalificacionMin:"$CalificacionMin" , "CalificacionTotal": "$CalificacionTotal",
       CalificacionConteo: "$CalificacionConteo", _id:0   }}
-  
+
 ])
-      
-      
-      
+
+
+
         db.alumnos.aggregate( [
   //{$match: {"clave_alu": 11050235}},
   {$unwind: "$evaluaciones"},
@@ -967,11 +967,11 @@ db.alumnos.aggregate( [
       calificacionPromedio:"$calificacionPromedio",CalificacionMax:"$CalificacionMax" ,
       CalificacionMin:"$CalificacionMin" , "CalificacionTotal": "$CalificacionTotal",
       CalificacionConteo: "$CalificacionConteo", _id:0   }}
-  
+
 ])
       db.alumnos.find({})
-      
-      
+
+
   db.alumnos.aggregate([
       {$match: {"sexo":"M"}},
       {$unwind: "$evaluaciones"},
@@ -980,22 +980,22 @@ db.alumnos.aggregate( [
       {$project:{
           nombre: "$_id.alumno",
           Materisreprobadas: "$Total"
-          
+
           }}
       ])
-          
+
 
   //$concat: ["$ap_paterno", " " ,"$ap_materno", " ", "$nombre" ]
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
+
+
+
+
+
+
+
+
+
+
 ////////////////
 //FECHAS
 
@@ -1015,8 +1015,8 @@ db.alumnos.aggregate( [
 ])
 
  db.alumnos.find({})
- 
- 
+
+
  db.fechas.insertMany([
 { fecha: "2017-02-08T12:10:40.787", timezone: "America/Mexico_City", mensaje:  "Paso1: Iniciado" },
 { fecha: "2017-02-08", timezone: "-05:00", mensaje:  "Paso1: Ended" },
@@ -1047,7 +1047,7 @@ db.fechas.aggregate([
    }}
 
 ])
-db.fechas.find()          
+db.fechas.find()
 
 
 
@@ -1077,10 +1077,10 @@ db.alumnos.aggregate([
         semana: {$week: "$evaluaciones.fecha"}
         }}
 ])
-        
-        
-        
-//Hacemos project, luego agrupamos y luego lo ponemos en otro project     
+
+
+
+//Hacemos project, luego agrupamos y luego lo ponemos en otro project
 db.alumnos.aggregate([
     {$unwind: "$evaluaciones"},
     {$project:{
@@ -1104,8 +1104,8 @@ db.alumnos.aggregate([
             }
       },{$sort: {amio: -1, mes:1} }
 ])
-      
-      
+
+
 db.alumnos.find({})
 
 
@@ -1120,16 +1120,16 @@ db.alumnos.aggregate([
               horaChiu: {$dateToString: {format: "%H-%M-%S:%L%z", date: "$evaluaciones.fecha",timezone: "America/Chihuahua"}},
               horaMx: {$dateToString: {format: "%H-%M-%S:%L%z", date: "$evaluaciones.fecha",timezone: "America/Mexico_City"}},
               horaNY: {$dateToString: {format: "%H-%M-%S:%L%z", date: "$evaluaciones.fecha",timezone: "America/New_York"}},
-              difMinMx: {$dateToString: {format: "%H-%M-%S:%L%z", date: "$evaluaciones.fecha",timezone: "America/Chihuahua"}}          
+              difMinMx: {$dateToString: {format: "%H-%M-%S:%L%z", date: "$evaluaciones.fecha",timezone: "America/Chihuahua"}}
               }
           }
       ])
 
- 
-  
+
+
 
 db.fechas.find()
-       
+
 db.fechas.aggregate([
       {$project: {
           fecha: {$dateFromString: {dateString: "$fecha"}},
@@ -1139,11 +1139,11 @@ db.fechas.aggregate([
                      },
           fehcaCDMX: {$dateFromString: {dateString: "$fecha",
                                         timezone: "$timezone"}}
-                      
-          
-          }} 
+
+
+          }}
     ])
-          
+
 
 
 
@@ -1162,14 +1162,14 @@ db.alumnos.aggregate([
             ciudad: "$_id.ciudad",anio: "$_id.anio", noEvaluaciones: "$noEvaluaciones",
             promedioEvaluaciones: "$promedio", totalEvaluaciones: "$totalEvaluaciones",
             totalEvaluacionesx100: "$totalEvaluacionesx100", _id: 0
-            }}   
+            }}
     ])
-            
-    
-    
-    
-    
-//Uso de map: Evalua cada item de un array, y devuelve un array, {input: El array,as: el nombre de cada item a iterar, in: funcion} 
+
+
+
+
+
+//Uso de map: Evalua cada item de un array, y devuelve un array, {input: El array,as: el nombre de cada item a iterar, in: funcion}
 db.alumnos.aggregate([
       {$match: {"evaluaciones": {$exists: 1}}},
       {
@@ -1196,17 +1196,17 @@ db.alumnos.aggregate([
               }
       }
    ])
-         
-     
-     
-     
-     
-     
-     
-     
-     
-     
-     
+
+
+
+
+
+
+
+
+
+
+
 /////////// Clase 1 Marzo
 //Agrupamos por ciudad e ipmrimimos cuantos alumnos hay por cada ciudad
 db.alumnos.aggregate([
@@ -1217,7 +1217,7 @@ db.alumnos.aggregate([
     },
     { $project:{ ciudad:"$_id", alumnos:"$alumnos", _id:0}}
 ])
-    
+
 
 
 //hace un array de cada alumno deacuerdo a sus evaluaciones (de tipo array ) y agrupamos, si un alumno tiene 5 evaluaciones, va a ver 5 item de ese alumno por la funcion unwind
@@ -1236,7 +1236,7 @@ db.alumnos.aggregate([
 db.alumnos.aggregate([
     { $group:{
             _id:"$ciudad",
-            alumnos:{ $push:{ 
+            alumnos:{ $push:{
                 alumno:{$concat:["$nombre"," ","$ap_paterno"," ","$ap_materno"]},
                 matricula:"$clave_alu", curp:"$curp"
                 } }
@@ -1248,7 +1248,7 @@ db.alumnos.aggregate([
 
 
 
-//Agrupamos por ciudad y años, sacamos evaluacion sumea y promedio, volvemos agruar solo porciudad, y años lo agremamos comodato en un array y al final en un project 
+//Agrupamos por ciudad y años, sacamos evaluacion sumea y promedio, volvemos agruar solo porciudad, y años lo agremamos comodato en un array y al final en un project
 db.alumnos.aggregate([
     { $unwind:"$evaluaciones"},
     { $match:{ $and:[{sexo:"M"}, {edad:{$exists:1}}]}},
@@ -1259,15 +1259,15 @@ db.alumnos.aggregate([
         }
     },
     { $group:{
-            _id:"$_id.ciudad", 
+            _id:"$_id.ciudad",
             ciudadDatos:{ $push:{ anios:"$_id.anios", total:"$total", promedio:"$promedio"} }
         }
     },
     { $project:{ ciudad:"$_id", ciudadDatos:"$ciudadDatos", _id:0}}
 ])
-    
 
-//$addToSet NO repite los valores que se agregan a un arreglo  No repetido valores 
+
+//$addToSet NO repite los valores que se agregan a un arreglo  No repetido valores
 db.alumnos.aggregate([
     {$unwind:"$evaluaciones"},
     { $group:{
@@ -1277,9 +1277,9 @@ db.alumnos.aggregate([
     },
     { $project:{ ciudad:"$_id", alumnos:"$alumnos", _id:0}}
 ])
-    
-    
-//agrupa por sexo y  agrega a un array las ciudades que tienen dicho sexo, pero se repiten, abajo un ejemplo sin repetir atributos 
+
+
+//agrupa por sexo y  agrega a un array las ciudades que tienen dicho sexo, pero se repiten, abajo un ejemplo sin repetir atributos
 db.alumnos.aggregate([
     {$sort:{ ciudad:1}},
     { $group:{
@@ -1289,12 +1289,12 @@ db.alumnos.aggregate([
     },
     { $project:{ sexo:"$_id", ciudades:"$ciudades", _id:0}}
 ])
-    
-    
 
 
 
-//ordena por el parametro pasado en $sort "Ordena" | $addToSet solo funciona en $group , y de esa agrupacion toma los atributos  y los uno en un array 
+
+
+//ordena por el parametro pasado en $sort "Ordena" | $addToSet solo funciona en $group , y de esa agrupacion toma los atributos  y los uno en un array
 db.alumnos.aggregate([
     {$sort:{ ciudad:1}},
     { $group:{
@@ -1332,11 +1332,11 @@ db.alumnos.aggregate([
        }},
     {$sort:{ "_id.alumno":1}},
 ])
-    
-    
- 
-    
-    
+
+
+
+
+
 
 db.alumnos.aggregate([
     { $unwind:"$evaluaciones"},
@@ -1353,8 +1353,8 @@ db.alumnos.aggregate([
        }},
     {$sort:{ "_id.alumno":1}},
 ])
-    
-    
+
+
 
 
 
@@ -1378,7 +1378,7 @@ db.alumnos.aggregate([
         semestre:"2022-1"
        }},
 ])
-    
+
 
 
      //pediente
@@ -1389,11 +1389,11 @@ db.alumnos.aggregate([
         _id:{matricula:"$clave_alu", alumno: {$concat: ["$nombre", " ", "$ap_paterno,", " ", "$ap_materno"]}},
         primera Calificacion: {$first}
         }}
-    
-    ]) 
-    
-    
-    
+
+    ])
+
+
+
 db.alumnos.aggregate([
      {$match: {$and:[{ciudad: "QUERETARO"},{sexo:"F"}]}},
      {$project: {
@@ -1408,12 +1408,12 @@ db.alumnos.aggregate([
                 promedioCalif: {$avg: "$evaluaciones.calificacion"},
                 maxCalif: {$max: "$evaluaciones.calificacion"}
                 }
-            } 
-        
+            }
+
       ])
-        
-            
-            
+
+
+
            // Lunes
 
 
@@ -1481,13 +1481,13 @@ db.alumnos.aggregate([
                     $concat: ["$nombre", " " , "$ap_paterno",
                     " ", "$ap_materno", " ", {$toString:"$evaluaciones.materia" }]
                     }}
-                } 
+                }
             }
      }
 ])
-     
-     
-//Arroja los mismos resultados, pero los agregamos a un $project, y ahi jugamos con el output 
+
+
+//Arroja los mismos resultados, pero los agregamos a un $project, y ahi jugamos con el output
 db.alumnos.aggregate([
     {$unwind:"$evaluaciones"},
     {
@@ -1514,13 +1514,13 @@ db.alumnos.aggregate([
              }
          }
 ])
-         
-         
 
 
 
 
-     
+
+
+
 db.alumnos.aggregate([
     {$unwind:"$evaluaciones"},
     {
@@ -1547,50 +1547,50 @@ db.alumnos.aggregate([
              }
          }*/
 ])
-     
-     
-     
-     
-     
-     
-     
-     
-     
-     
+
+
+
+
+
+
+
+
+
+
  db.alumnos.aggregate([
-     {$unwind:"$materias"}, 
+     {$unwind:"$materias"},
     {$sortByCount: "$materias"},
     {$project: {"materia": "$_id",nrenglones:"$count", _id:0}}
-     ])    
-     
-     
+     ])
+
+
  //Facet crea un arreglo de documentos y lo agregamos a un nombre de objeto
 db.alumnos.aggregate([
     {
      $facet:{
         "materias": [
-        {$unwind:"$materias"}, 
+        {$unwind:"$materias"},
         {$sortByCount: "$materias"},
         {$project: {"materia": "$_id",nrenglones:"$count", _id:0}}
         ]
-      } 
-     }    
+      }
+     }
 ])
-     
-     
-     
-     
-     
+
+
+
+
+
 db.alumnos.aggregate([
     {
      $facet:{
         "materias": [
-        {$unwind:"$materias"}, 
+        {$unwind:"$materias"},
         {$sortByCount: "$materias"},
         {$project: {"materia": "$_id",nrenglones:"$count", _id:0}}
         ],
         "evaluaciones": [
-        {$unwind:"$evaluaciones"}, 
+        {$unwind:"$evaluaciones"},
         {$sortByCount: "$evaluaciones.calificacion"},
         {$project: {"materia": "$_id",nrenglones:"$count", _id:0}}
         ],
@@ -1598,6 +1598,241 @@ db.alumnos.aggregate([
         {$sortByCount:"$ciudad"},
         {$project:{"ciudad": "$_id", nrenglones:"$count",_id:0}}
         ]
-      } 
-     }    
+      }
+     }
 ])
+
+//CLASE DE $lookup
+
+
+//no me imprime nada
+db.alumnos.aggregate([
+
+    {$match:{
+
+        $and:[{"ciudad" : "QUERETARO"}, {"nombre": /DIANA XINEMI/i}]
+
+        }
+
+    },
+
+    {
+
+    $project:{
+
+        matricula:"$clave_alu", "evaluaciones":1, fecha:"$evaluaciones.fecha",
+
+        alumno: { $concat:["$ap_paterno", " ", "$ap_materno", " ", "$nombre"] }
+
+        }
+
+    },
+
+    {
+
+    $merge:{ into: "alumnosQueretaro"}
+
+    }
+
+])
+
+
+
+
+    //Arroja la busqueda que mache con lo especificado y lookup las une con los documen
+db.alumnos.aggregate([
+
+    {$lookup:{
+
+        from: "alumnosQueretaro",
+
+        localField:"clave_alu",
+
+        foreignField:"matricula",
+
+        as:"alumnosQro"
+
+        }
+
+    },
+
+    {$match:{
+
+        $and:[{"ciudad" : "QUERETARO"}, {"nombre":/jose|ana/i}]
+
+        }
+
+    }
+
+])
+
+
+
+
+db.alumnos.find()
+
+//imprime objetos con el cd  del project y objetos de alumnos del cruzamiento entre los documentos estudiantes
+// dados por el forignField y el localField
+db.alumnos.aggregate([
+
+    {$group:{_id:"$ciudad"}},
+
+    {$project:{cd:"$_id", _id:0}},
+
+    {$lookup:{
+
+        from: "estudiantes",
+
+        localField:"cd",
+
+        foreignField:"ciudad",
+
+        as:"alumnos"
+
+        }
+
+    }
+
+])
+
+
+//Imprime el cd del project y solo el alumno realizado en el project del pipeline
+db.alumnos.aggregate([
+
+    {$group:{_id:"$ciudad"}},
+
+    {$project:{cd:"$_id", _id:0}},
+
+    {$lookup:{
+
+        from: "estudiantes",
+
+        pipeline:[
+
+            {$match:{sexo:"F"}},
+
+            {$project:{
+
+                _id:0,
+
+                alumno:{$concat:["$ap_paterno", " ", "$ap_materno", " ", "$nombre"]}
+
+                }
+
+            }
+
+        ],
+
+        localField:"cd",
+
+        foreignField:"ciudad",
+
+        as:"alumnos"
+
+        }
+
+    }
+
+])
+
+
+
+
+
+
+
+
+
+//Validacion al ingresar nuevos datos a una collection
+
+db.contactos.find()
+
+db.runCommand({
+    collMod:"contactos",
+    validationLevel:"moderate",
+    validationAction: "error",
+    validator:{
+        $jsonSchema:{
+            bsonType:"object",
+            required:["nombre","telefono"],
+            properties:{
+                telefono:{
+                    bsonType:"string",
+                    description:"Es necesrio ingresar un telefono"
+                    },
+                etiqueta:{
+                    enum:["Alumno","Profesor","Directivo"],
+                    description:"Entrada invalida"
+                    },
+                anioIngreso:{
+                    bsonType:"int",
+                    minimum:2000,
+                    maximum:2022
+                    },
+                promedio:{
+                    bsonType:"decimal",
+                    minimum:0.00,
+                    maximum:10.00
+                    },
+                direccion:{
+                    bsonType: "object",
+                    required:["ciudad","cp"],
+                    properties:{
+                        calle: {
+                            bsonType:"string"
+                            },
+                        colonia:{
+                            bsonType:"string",
+                            maxLength:30
+                            },
+                        cp:{
+                            bsonType:"int"
+                            }
+                        }
+                    },
+                email:{
+                    bsonType:"string",
+                    pattern: "@fes\.mx$"
+                    }
+                }
+            }
+        }
+    })
+
+db.contactos.insert({nombre:"Juan",apellidos:"Lopez"})
+
+db.contactos.insert({nombre:"Juan",telefono:123456789})
+db.contactos.insert({contacto:"Juan",apellidos:"Lopez"})
+
+db.getCollectionInfos()
+db.getCollectionInfos({"name": "contactos"})
+
+db.contactos.insert({nombre:"Maria",apellido:"Garcia",telefono:232434233})
+db.contactos.insert({nombre:"Maria",apellido:"Garcia",telefono:"123456789"})
+
+db.contactos.insert({nombre:"Jorge",apellido:"Garcia",telefono:"123456789"})
+db.contactos.insert({nombre:"Vania",apellido:"Garcia",telefono:"123456789",etiqueta:"Provedor"})
+db.contactos.insert({nombre:"Vania",apellido:"Garcia",telefono:"123456789",etiqueta:"Alumno"})
+
+//Agregamos  el NumbertInt por qu esolo permite int, y cuando ingresas un numero mongo lo agrega como decimal
+db.contactos.insert({nombre:"Luis",telefono:"123456789",etiqueta:"Directivo",
+    anioIngreso:NumberInt(2000)})
+
+db.contactos.insert({nombre:"Karla",telefono:"123456789",etiqueta:"Directivo",
+    anioIngreso:NumberInt(2000),promedio:NumberDecimal(8.0)})
+
+db.contactos.insert({nombre:"Oscar",apellido:"Medina",telefono:"123456789",etiqueta:"Profesor",
+    direccion:{calle:"Av ranchoseco",numero:"S/N",cp:NumberInt(50000),ciudad:"Neza"}})
+
+//La colonia debe de ser enor a 30
+db.contactos.insert({nombre:"Oscar",apellido:"Medina",telefono:"123456789",etiqueta:"Profesor",
+    direccion:{calle:"Av ranchoseco",numero:"S/N",cp:NumberInt(50000),ciudad:"Neza",
+        colonia:"Impullsora Impulsora impulsora impulsora,impulsora"}})
+
+db.contactos.insert({nombre:"Oscar",apellido:"Medina",telefono:"123456789",etiqueta:"Profesor",
+    direccion:{calle:"Av ranchoseco",numero:"S/N",cp:NumberInt(50000),ciudad:"Neza",
+        colonia:"Impullsora"}})
+
+
+db.contactos.insert({nombre:"Arturo",telefono:"123456789",etiqueta:"Alumno",
+    anioIngreso:NumberInt(2000),email:"arturo@fes.mx"})

@@ -1836,3 +1836,49 @@ db.contactos.insert({nombre:"Oscar",apellido:"Medina",telefono:"123456789",etiqu
 
 db.contactos.insert({nombre:"Arturo",telefono:"123456789",etiqueta:"Alumno",
     anioIngreso:NumberInt(2000),email:"arturo@fes.mx"})
+
+
+
+
+
+
+
+
+    //clase de 9mayo- usamos javaScript para imprimir, uso de cursor
+    db.alumnos.aggregate([
+        {$match:{ciudad:"QUERETARO"}},
+        {$group:{_id:"$edad.anios",nalu:{$sum:1}}},
+        {$project:{anio:"$_id",nalu:"$nalu", _id:0}},
+        {$sort:{nalu:1}}
+    ])
+
+
+
+    db.alumnos.explain().aggregate([
+        {$match:{ciudad:"QUERETARO"}},
+        {$group:{_id:"$edad.anios",nalu:{$sum:1}}},
+        {$project:{anio:"$_id",nalu:"$nalu", _id:0}},
+        {$sort:{nalu:1}}
+    ])
+
+    cursor = db.alumnos.find(
+        {ciudad:"QUERETARO"}
+    )
+    cursor
+    cursor.count()            //Cuenta los registros
+    cursor.size()
+    cursor.batchSize()        //
+    cursor.hasNext()         //NOS DICE QUE SI TENEMOS MAS ELEMENTOS O ES EL ULTIMO
+    cursor.next()            //Pasa al siguiente
+    cursor.explain()         //informacion de la query
+    cursor.toArray()
+
+
+    while(cursor.hasNext()){print(cursor.next().nombre)}
+    arrAlu = cursor.toArray()
+    arrAlu[10]
+
+
+    //Recorremos un array e imprimimos
+    arrAlu.forEach(function(a)
+    {print("aluno "+a.nombre + " "+ a.ap_paterno+ " "+ a.ap_materno);})

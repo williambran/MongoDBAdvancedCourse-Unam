@@ -1882,3 +1882,93 @@ db.contactos.insert({nombre:"Arturo",telefono:"123456789",etiqueta:"Alumno",
     //Recorremos un array e imprimimos
     arrAlu.forEach(function(a)
     {print("aluno "+a.nombre + " "+ a.ap_paterno+ " "+ a.ap_materno);})
+
+
+
+
+
+
+
+
+//class sobre creacion de index  11/05
+//Agragacion de nuevos documentos https://raw.githubusercontent.com/mongodb/docs-assets/geospatial/restaurants.json
+//https://raw.githubusercontent.com/mongodb/docs-assets/geospatial/neighborhoods.json
+
+db.neighborhoods.getIndexes()
+
+db.restaurantsgeo.getIndexes()
+
+db.restaurantsgeo.createIndex({name:1},{name:"Restaurant name"})
+
+
+db.restaurantsgeo.createIndex({location: "2dsphere"})
+
+db.neighborhoods.createIndex({geometry:"2dsphere"})
+
+
+db.neighborhoods.find({ geometry :{
+    $geoIntersects:{
+        $geometry:{
+            type: "Point",
+            coordinates:[-73.93414657, 40.82302903]
+            }}
+    }
+    })
+
+
+
+
+db.neighborhoods.find({
+    geometry:{
+        $geoIntersects:{
+            $geometry:{
+                type:"Point",
+                coordinates:[-73.93414657,40.82302903]
+                }
+            }
+        }
+    })
+
+
+var n = db.neighborhoods.find({
+    geometry:{
+        $geoIntersects:{
+            $geometry:{
+                type:"Point",
+                coordinates:[-73.93414657,40.82302903]
+                }
+            }
+        }
+    })
+
+    n
+    var neighborhood = db.neighborhoods.findOne({
+    geometry:{
+        $geoIntersects:{
+            $geometry:{
+                type:"Point",
+                coordinates:[-73.93414657,40.82302903]
+                }
+            }
+        }
+    })
+
+    neighborhood
+    //Localizar restaurantes en el vecindario en el que nos encontramos
+db.restaurantsgeo.find({ location:{$geoWithin:{$geometry:neighborhood.geometry}}}).count()
+
+
+//el factor 3963.2 es el factor de conversion entre millas y el mundo busca las coordenadas alderedor de nuestra loca
+db.restaurantsgeo.find({ location:{$geoWithin:{$centerSphere:[[-73.93414657,40.82302903], 1 / 3963.2 ]} } } ).count()
+
+// busca los lgares mas cercanos a nuestro punto
+var mpm = 1609.39
+db.restaurantsgeo.find({ location:
+    {$nearSphere:
+        {$geometry:{
+            type:"Point",
+            coordinates:[-73.93414657,40.82302903],
+            $maxDistance: 5* mpm
+          }}
+     }
+    } ).count()
